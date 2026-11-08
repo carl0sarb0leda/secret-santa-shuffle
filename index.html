@@ -7,41 +7,23 @@
 <style>
   /* Layout: one left-aligned column. A code field above, a gift tag below that fills in with the name. */
   :root {
-    --bg: #edf1e8;
-    --surface: #f8faf4;
-    --fg: #14281f;
-    --muted: #55675c;
-    --line: #c5cfc0;
-    --accent: #b8231c;
-    --accent-ink: #ffffff;
-    --font-display: "Young Serif", Georgia, "Times New Roman", serif;
-    --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0e1a14;
-      --surface: #16271e;
-      --fg: #e9efe6;
-      --muted: #9bafa2;
-      --line: #2b4034;
-      --accent: #ee5a43;
-      --accent-ink: #1a0b08;
-      color-scheme: dark;
-    }
-  }
-  :root[data-theme="dark"] {
+    color-scheme: dark;
     --bg: #0e1a14;
     --surface: #16271e;
     --fg: #e9efe6;
     --muted: #9bafa2;
     --line: #2b4034;
     --accent: #ee5a43;
+    --accent-text: var(--accent);
     --accent-ink: #1a0b08;
-    color-scheme: dark;
+    --font-display: "Young Serif", Georgia, "Times New Roman", serif;
+    --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
 
   * { box-sizing: border-box; }
   body {
+    position: relative;
+    isolation: isolate;
     background: var(--bg);
     color: var(--fg);
     font-family: var(--font-body);
@@ -51,7 +33,42 @@
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
   }
-  main { max-width: 30rem; margin: 0 auto; display: grid; gap: 1.75rem; min-width: 0; }
+  .sparkle-field {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .sparkle-field span {
+    position: absolute;
+    display: block;
+    color: #f6d58a;
+    line-height: 1;
+    text-shadow: 0 0 10px rgb(246 213 138 / 50%);
+    animation: sparkle-twinkle 3.8s ease-in-out infinite;
+  }
+  .sparkle-field span:nth-child(1) { top: 14%; left: 8%; font-size: 1.1rem; animation-delay: -0.5s; }
+  .sparkle-field span:nth-child(2) { top: 12%; right: 12%; font-size: 1.45rem; animation-delay: -2.2s; }
+  .sparkle-field span:nth-child(3) { top: 38%; right: 7%; font-size: 0.9rem; animation-delay: -1.3s; }
+  .sparkle-field span:nth-child(4) { top: 57%; left: 13%; font-size: 1.3rem; animation-delay: -2.9s; }
+  .sparkle-field span:nth-child(5) { top: 76%; right: 16%; font-size: 1.15rem; animation-delay: -0.8s; }
+  .sparkle-field span:nth-child(6) { top: 88%; left: 53%; font-size: 0.85rem; animation-delay: -2s; }
+  .sparkle-field span:nth-child(7) { top: 63%; right: 48%; font-size: 0.75rem; animation-delay: -3.4s; }
+  @media (max-width: 40rem) {
+    .sparkle-field span:nth-child(1) { top: 30%; left: auto; right: 6%; }
+    .sparkle-field span:nth-child(2) { top: 53%; left: 7%; right: auto; font-size: 0.85rem; }
+    .sparkle-field span:nth-child(3) { top: 68.5%; right: 7%; }
+    .sparkle-field span:nth-child(4) { top: 82%; left: 20%; }
+    .sparkle-field span:nth-child(5) { top: 86%; right: 28%; }
+    .sparkle-field span:nth-child(6) { top: 94%; left: 68%; }
+    .sparkle-field span:nth-child(7) { top: 97%; left: 44%; right: auto; }
+  }
+  @keyframes sparkle-twinkle {
+    0%, 100% { opacity: 0.18; transform: scale(0.7) rotate(-12deg); }
+    50% { opacity: 0.9; transform: scale(1.12) rotate(18deg); }
+  }
+  main { position: relative; z-index: 1; max-width: 30rem; margin: 0 auto; display: grid; gap: 1.75rem; min-width: 0; }
 
   header {
     display: grid;
@@ -82,7 +99,7 @@
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-text);
     margin: 0 0 0.5rem;
   }
   h1 {
@@ -132,7 +149,7 @@
   input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
   .hint { margin: 0; font-size: 0.88rem; color: var(--muted); }
   .msg { min-height: 1.4em; margin: 0; font-size: 0.92rem; color: var(--muted); }
-  .msg.err { color: var(--accent); font-weight: 600; }
+  .msg.err { color: var(--accent-text); font-weight: 600; }
 
   /* Gift tag */
   .tag {
@@ -170,15 +187,18 @@
   .foot p { margin: 0; }
   .foot strong { color: var(--fg); font-weight: 600; }
 
-  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
 </style>
 
+<div class="sparkle-field" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span><span>✧</span><span>✦</span></div>
 <main>
   <header>
     <div class="intro">
       <p class="eyebrow">Kitchener Team - Secret Santa 2026</p>
       <h1>Secret Santa Shuffle 😊</h1>
-      <p class="lede">Type the code you were sent privately. Nobody else can see your result.</p>
+      <p class="lede">Type your code. Nobody else can see your result.</p>
     </div>
     <img class="team-badge" src="assets/kteam-pic.jpg" alt="Kitchener team at dinner">
   </header>
