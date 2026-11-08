@@ -53,6 +53,30 @@
   }
   main { max-width: 30rem; margin: 0 auto; display: grid; gap: 1.75rem; min-width: 0; }
 
+  header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 6rem;
+    align-items: start;
+    gap: 0.75rem;
+    padding-right: 0.25rem;
+  }
+  .intro { min-width: 0; }
+  .team-badge {
+    display: block;
+    width: 6rem;
+    aspect-ratio: 1;
+    margin: 0.15rem 0 0;
+    border: 3px solid var(--surface);
+    border-radius: 22px;
+    object-fit: cover;
+    box-shadow: 0 5px 16px rgb(20 40 31 / 18%);
+    animation: badge-float 3.2s ease-in-out infinite;
+  }
+  @keyframes badge-float {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-5px) rotate(3deg); }
+  }
+
   .eyebrow {
     font-size: 0.78rem;
     font-weight: 600;
@@ -106,6 +130,7 @@
     font-size: 0.9rem;
   }
   input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .hint { margin: 0; font-size: 0.88rem; color: var(--muted); }
   .msg { min-height: 1.4em; margin: 0; font-size: 0.92rem; color: var(--muted); }
   .msg.err { color: var(--accent); font-weight: 600; }
 
@@ -115,21 +140,10 @@
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 10px;
-    padding: 3.1rem 1.5rem 1.6rem;
+    padding: 1.6rem 1.5rem;
     display: grid;
     gap: 0.35rem;
     min-width: 0;
-  }
-  .tag::before {
-    content: "";
-    position: absolute;
-    top: 1.05rem;
-    left: 1.5rem;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    background: var(--bg);
-    border: 1px solid var(--line);
   }
   .tag .label {
     font-size: 0.78rem;
@@ -161,9 +175,12 @@
 
 <main>
   <header>
-    <p class="eyebrow">Secret Santa 2026</p>
-    <h1>Secret Santa Shuffle</h1>
-    <p class="lede">Type the code you were sent privately. It shows who you are buying a present for. Nobody else can see your result.</p>
+    <div class="intro">
+      <p class="eyebrow">Kitchener Team - Secret Santa 2026</p>
+      <h1>Secret Santa Shuffle 😊</h1>
+      <p class="lede">Type the code you were sent privately. Nobody else can see your result.</p>
+    </div>
+    <img class="team-badge" src="assets/kteam-pic.jpg" alt="Kitchener team at dinner">
   </header>
 
   <form id="form" autocomplete="off">
@@ -172,27 +189,25 @@
       <input id="code" type="text" placeholder="for example tui-0000" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go">
       <button id="go" type="submit">Shuffle</button>
     </div>
+    <p class="hint">Your shuffle reveals a unique match that’s locked in for you. Keep it secret!</p>
     <p class="msg" id="msg" role="status" aria-live="polite"></p>
   </form>
 
   <section class="tag" aria-live="polite">
     <p class="label" id="tagLabel">Your giftee</p>
-    <p class="name waiting" id="name">Appears here after you shuffle</p>
+    <p class="name waiting" id="name">Appears here after shuffle</p>
     <p class="from" id="from" hidden></p>
-    <div class="actions" id="actions" hidden>
-      <button type="button" class="quiet" id="again">Shuffle again</button>
-    </div>
   </section>
 
   <div class="foot">
     <p id="countdown"></p>
-    <p>In the draw: <strong>Carlos, Angel, Chihiro, Marina</strong>. Close this page when you have noted your name.</p>
+    <p>In the draw: <strong>Angel, Marina, Chihiro, Carlos</strong></p>
   </div>
 </main>
 
 <script>
 (function () {
-  var DATA = {"iter":300000,"entries":[{"s":"AeNSU3HgH4Jaex3/LhxxLA==","i":"AbymsSSHWXfvt4bc","c":"ugsRQcqDjdZxYaGdoa6If9SyNSBOX8PVeu8pmMuuRB0VdnF6MOVJIbhuRCjqH84="},{"s":"nh4oIDJK3rDQop5pgei1nw==","i":"li33Rx59i45UXOpE","c":"aYGZBsSGLm14DifHBAvN5KwFwDKnE2ev88elTCcDV5R+fRaicq/XmKBh9sBDH6Ky"},{"s":"BA2CTwkOMbks0LRIpuMN4w==","i":"dKow2QZZbLcA1MWa","c":"cIjMl7klf1rPPsw1CNTOFuroa3Hz3CqerE8XWVn8FTxIjlX4Eq374x0L9eZDbQ=="},{"s":"5qUF/lSlOJvPy+SSe6KvtA==","i":"GCDTPiZ1b/ETd65Z","c":"Naajpt28IcusIsKBQjFFaF+qF78D4qd29IbQbZzMbmW0hNsHNxnZU5WZu0uGMBU="}]};
+  var DATA = {"iter":300000,"entries":[{"s":"3t4y1g6MtWLPe0dLe+CP3Q==","i":"oDSkeef1aGCt9gih","c":"mmaZ7Cglji44BUzB2sIkWPYIXsZXgbAJOjtb62L6z7nXGPaS0kJxdcvjF3m7/sA="},{"s":"OSBSoqipzjIDzBVNc0q6MQ==","i":"QBNvsGLrEri4lElQ","c":"zXD5QRwgWdi5+y8rgO5k8HybreGNicuWvnq1vc7jXp/87KKC8asoztiF6THXc3QO"},{"s":"wR0CzRrS8uKQY2VwVEBurg==","i":"X4Fj6CXRyHRHmWEN","c":"bQDez3bK/c52SzFCSpfINnVLNzde9g0Vh06IGjC6vMTCg848RTH3RxAjVgnR0Q=="},{"s":"ph96xXz3YoytYIQf2stqWg==","i":"LoUKGpGn9NNMLzA+","c":"u908f+bjpdMbTEOS2IXjmB7rtx0rxnWOxWHe+9YVlQLOobWeU5lhd5z6tCyEqck="}]};
   var NAMES = ['Carlos', 'Angel', 'Chihiro', 'Marina'];
 
   var form = document.getElementById('form');
@@ -201,24 +216,22 @@
   var msgEl = document.getElementById('msg');
   var nameEl = document.getElementById('name');
   var fromEl = document.getElementById('from');
-  var actionsEl = document.getElementById('actions');
-  var againEl = document.getElementById('again');
   var labelEl = document.getElementById('tagLabel');
   var countdownEl = document.getElementById('countdown');
 
   var result = null;
   var timer = null;
 
-  // Days until Christmas
+  // Days until the Kitchener Christmas party
   (function () {
     var now = new Date();
-    var xmas = new Date(now.getFullYear(), 11, 25);
+    var party = new Date(now.getFullYear(), 10, 21);
     var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var days = Math.round((xmas - today) / 86400000);
-    if (days > 1) countdownEl.textContent = days + ' days until Christmas. Plenty of time to order the present.';
-    else if (days === 1) countdownEl.textContent = 'Christmas is tomorrow.';
-    else if (days === 0) countdownEl.textContent = 'Merry Christmas.';
-    else countdownEl.textContent = '';
+    var days = Math.round((party - today) / 86400000);
+    if (days > 1) countdownEl.textContent = days + ' days until the Kitchener Christmas party on November 21.';
+    else if (days === 1) countdownEl.textContent = 'The Kitchener Christmas party is tomorrow, November 21.';
+    else if (days === 0) countdownEl.textContent = 'The Kitchener Christmas party is today!';
+    else countdownEl.textContent = 'The Kitchener Christmas party was November 21.';
   })();
 
   function fromB64(s) {
@@ -253,9 +266,8 @@
     nameEl.textContent = result.to;
     labelEl.textContent = 'You are buying for';
     fromEl.hidden = false;
-    fromEl.textContent = 'Hi ' + result.from + ', keep this one secret until Christmas Day.';
-    actionsEl.hidden = false;
-    goEl.disabled = false;
+    fromEl.textContent = 'Hi ' + result.from + ', happy gift hunting! 🎁';
+    goEl.disabled = true;
   }
 
   function shuffle() {
@@ -265,7 +277,6 @@
     if (reduce) { showFinal(); return; }
     labelEl.textContent = 'Shuffling';
     fromEl.hidden = true;
-    actionsEl.hidden = true;
     nameEl.className = 'name spinning';
     var step = 0, total = 16, last = '';
     (function tick() {
@@ -304,7 +315,6 @@
     shuffle();
   });
 
-  againEl.addEventListener('click', function () { if (result) { goEl.disabled = true; shuffle(); } });
 })();
 </script>
 
